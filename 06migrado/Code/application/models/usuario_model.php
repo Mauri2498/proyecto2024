@@ -74,4 +74,60 @@ class Usuario_model extends CI_Model {
 		$this->db->where('clave', $contrasenia);  
 		return $this->db->get(); 
 	}
+
+
+	public function generarTokenRestablecimiento($correo) {
+		$token = bin2hex(random_bytes(50)); // Genera un token aleatorio
+		$expiry = date('Y-m-d H:i:s', strtotime('+5 minutes')); // Token válido por 1 hora
+		
+		$this->db->set('reiniciarToken', $token);
+		$this->db->set('tokenExpirado', $expiry);
+		$this->db->where('correo', $correo);
+		$this->db->update('usuario');
+		
+		return $token;
+	}
+	
+	public function verificarToken($token) {
+		$this->db->select('idusuario, tokenExpirado');
+		$this->db->from('usuario');
+		$this->db->where('reiniciarToken', $token);
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 1) {
+			$row = $query->row();
+			if (strtotime($row->tokenExpirado) > time()) {
+				return $row->idusuario;
+			}
+		}
+		return false;
+	}
+	public function restablecerContrasenia($idusuario, $nuevaContrasenia) {
+		$data = array(
+			'clave' => sha1($nuevaContrasenia),
+		);
+		$this->db->where('idusuario', $idusuario);
+		$this->db->update('usuario', $data);
+	}
+
+/* 	public function existeCorreo($correo) {
+		$this->db->where('correo', $correo);
+		$query = $this->db->get('usuario');
+		return $query->num_rows() > 0;
+	} */
+
+
+	public function obtenerUsuarioPorCorreo($correo) {
+		$this->db->where('correo', $correo);
+		$query = $this->db->get('usuario');
+		return $query->row();
+	}
+	
+	public function actualizarContrasenia($idusuario, $nuevaContrasenia) {
+		$data = array(
+			'clave' => sha1($nuevaContrasenia)
+		);
+		$this->db->where('idusuario', $idusuario);
+		$this->db->update('usuario', $data);
+	}
 }

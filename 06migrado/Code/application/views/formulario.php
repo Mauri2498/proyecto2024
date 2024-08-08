@@ -4,11 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Registro</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="<?php echo base_url(); ?>adminlte/plugins/fontawesome-free/css/all.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="<?php echo base_url(); ?>adminlte/dist/css/adminlte.min.css">
+
   <style>
     .register-box {
       margin: 0 auto; 
@@ -71,6 +67,14 @@
         <div class="input-group-append">
           <div class="input-group-text">
             <span class="fas fa-phone"></span>
+          </div>
+        </div>
+      </div>
+      <div class="input-group mb-3">
+        <input type="email" name="correo" id="correo" class="form-control" placeholder="Correo electrónico">
+        <div class="input-group-append">
+          <div class="input-group-text">
+          <span class="fas fa-envelope"></span>
           </div>
         </div>
       </div>

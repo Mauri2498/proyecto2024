@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendar Cita</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
+<title>Agendar Cita</title>
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -109,5 +101,4 @@ $(document).ready(function() {
     });
 });
 </script>
-</body>
-</html>
+

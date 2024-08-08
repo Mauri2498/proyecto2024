@@ -87,8 +87,10 @@ class Usuario extends CI_Controller {
 
 	public function agregar()
 	{
+		$this->load->view('inc/head');
 		$this->load->view('inc/menu');
 		$this->load->view('formulario');
+		//$this->load->view('inc/footer');
 	}
 	public function agregarR()
 	{
@@ -97,7 +99,7 @@ class Usuario extends CI_Controller {
 	}
 	public function login()
 	{
-		$this->load->view('loguin');
+		$this->load->view('login3');
 	}
 	public function agregarbd()
 	{
@@ -108,6 +110,7 @@ class Usuario extends CI_Controller {
 		$data['sexo']=strtoupper($_POST['sexo']);// 
 		$data['fechaNac']=strtoupper($_POST['fechaNac']);// 
 		$data['celular']=$_POST['celular'];
+		$data['correo']=$_POST['correo'];// 
 		$data['usuario']=$_POST['usuario'];// 
 		$data['clave']=sha1($_POST['contrasenia']);// 
 		$data['tipoUsuario']=strtoupper($_POST['tipoUsuario']);// 
@@ -195,5 +198,98 @@ class Usuario extends CI_Controller {
 		
 		$this->session->set_flashdata('success', 'Contraseña cambiada exitosamente.'); 
 		redirect('usuario/logout'); 
+	}
+
+	
+	public function solicitarRestablecimiento() {
+		$this->load->view('solicitarRestablecimiento');
+	}
+	public function sinCorreo() {
+		$this->load->view('formularioRestablecimiento');
+	}
+
+
+	public function procesarRestablecimiento() {
+		$correo = $this->input->post('correo');
+		$nuevaContrasenia = $this->input->post('nuevaContrasenia');
+		$confirmarContrasenia = $this->input->post('confirmarContrasenia');
+	
+		if ($nuevaContrasenia !== $confirmarContrasenia) {
+			$this->session->set_flashdata('error', 'Las contraseñas no coinciden.');
+			redirect('usuario/solicitarRestablecimiento');
+			return;
+		}
+	
+		$usuario = $this->usuario_model->obtenerUsuarioPorCorreo($correo);
+		if (!$usuario) {
+			$this->session->set_flashdata('error', 'No se encontró un usuario con ese correo.');
+			redirect('usuario/sinCorreo');
+			return;
+		}
+	
+		$this->usuario_model->actualizarContrasenia($usuario->idusuario, $nuevaContrasenia);
+		$this->session->set_flashdata('success', 'Contraseña actualizada exitosamente.');
+		redirect('usuario/login');
+	}
+	public function enviarEnlaceRestablecimiento() {
+		$correo = $this->input->post('correo');
+	
+		// Verifica si el correo está registrado en la base de datos
+		if (!$this->usuario_model->obtenerUsuarioPorCorreo($correo)) {
+			$this->session->set_flashdata('error', 'El correo ingresado no está registrado en nuestro sistema.');
+			redirect('usuario/solicitarRestablecimiento');
+			return;
+		}
+	
+		// Genera un token para restablecimiento de contraseña
+		$token = $this->usuario_model->generarTokenRestablecimiento($correo);
+	
+		// Configuración y envío del correo
+		$this->load->library('email');
+	
+		$this->email->from('europa2498@gmail.com', 'Dentista');
+		$this->email->to($correo);
+		$this->email->subject('Restablecimiento de Contraseña');
+		$resetLink = base_url() . "acortarContra.php?token=$token";
+		$this->email->message("Haz clic en el siguiente enlace para restablecer tu contraseña: <a href='" . $resetLink . "'>Link para poder restablecer la Contraseña</a>");
+	
+		// Verifica si el correo fue enviado exitosamente
+		if (!$this->email->send()) {
+			$error = $this->email->print_debugger(array('headers'));
+			log_message('error', 'Error al enviar correo: ' . $error);
+			$this->session->set_flashdata('error', 'Hubo un problema al enviar el correo de restablecimiento.');
+			redirect('usuario/solicitarRestablecimiento');
+			return;
+		}
+	
+		// Muestra mensaje de éxito
+		$this->session->set_flashdata('success', 'Se ha enviado un enlace de restablecimiento a tu correo electrónico.');
+		redirect('usuario/solicitarRestablecimiento');
+	}
+	
+	public function restablecerContrasenia($token) {
+		$idusuario = $this->usuario_model->verificarToken($token);
+		if ($idusuario) {
+			$data['token'] = $token;
+			$this->load->view('formularioRestablecimiento', $data);
+		} else {
+			echo "Token inválido o expirado";
+		}
+	}
+	
+	public function actualizarContrasenia() {
+		$nuevaContrasenia = $this->input->post('nuevaContrasenia');
+		$confirmarContrasenia = $this->input->post('confirmarContrasenia');
+	
+		if ($nuevaContrasenia !== $confirmarContrasenia) {
+			$this->session->set_flashdata('error', 'Las contraseñas no coinciden.');
+			redirect('usuario/cambiarContrasenia');
+			return;
+		}
+	
+		$idusuario = $this->session->userdata('idusuario'); 
+		$this->usuario_model->actualizarContrasenia($idusuario, $nuevaContrasenia);
+		$this->session->set_flashdata('success', 'Contraseña actualizada exitosamente.');
+		redirect('usuario/login'); 
 	}
 }
