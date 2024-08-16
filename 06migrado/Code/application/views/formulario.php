@@ -27,7 +27,7 @@
     <div class="card-body">
       <p class="login-box-msg">Registrar nuevo usuario</p>
 
-      <?php echo form_open_multipart("usuario/agregarbd", 'id="registroForm"'); ?>
+      <?php echo form_open_multipart("usuario/agregarbdU", 'id="registroForm"'); ?>
 
       <div class="input-group mb-3">
         <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre" minlength="3" required>

@@ -2,11 +2,18 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Usuario_model extends CI_Model {
-	public function listausuarios()
+/* 	public function listausuarios()
 	{
 		$this->db->select('*');
 		$this->db->from('usuario');
 		return $this->db->get();  
+	} */
+	public function listausuarios()
+	{
+		$this->db->select('*');
+		$this->db->from('usuario');
+		$this->db->where_in('estadoUsuario', [1, 3]);
+		return $this->db->get();
 	}
 	public function listaPacientes()
 	{
@@ -44,8 +51,9 @@ class Usuario_model extends CI_Model {
 	
 	public function eliminarUsuario($idusuario)
 	{
+		//$this->db->from('usuario');
 		$this->db->where('idusuario',$idusuario);
-		$this->db->delete('usuario');
+		$this->db->update('usuario', ['estadoUsuario' => 0]);
 	}
 
 	public function validar($usuario,$clave)

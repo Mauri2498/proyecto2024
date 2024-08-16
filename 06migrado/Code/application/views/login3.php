@@ -27,6 +27,10 @@
 			opacity: 0;
 			transition: opacity 0.5s ease-out;
 		}
+		.login100-form-title{
+			font-size: 30px;
+            color: #333;
+		}
 	</style>
 </head>
 
