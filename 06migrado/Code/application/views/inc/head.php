@@ -22,6 +22,7 @@
   <style>
     /* Estilos personalizados para la barra de navegación */
     .main-header {
+      
       background-color: #343a40; /* Color de fondo oscuro para la barra de navegación */
     }
     

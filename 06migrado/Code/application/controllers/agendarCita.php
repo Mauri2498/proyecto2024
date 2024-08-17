@@ -95,9 +95,9 @@ class AgendarCita extends CI_Controller {
 	{
 		$data['cita'] = $this->agendarCita_Model->listaAtendidos();
 		$this->load->view('inc/head');
-		//$this->load->view('inc/menu');
+		$this->load->view('inc/menu');
 		$this->load->view('atendidos', $data);
-		//$this->load->view('inc/footer');
+		$this->load->view('inc/footer');
 	}
 
 }
