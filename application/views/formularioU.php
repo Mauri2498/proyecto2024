@@ -121,7 +121,6 @@
   </div>
 </div>
 
-<!-- Script para generar la contraseña aleatoria de 3 dígitos -->
 <script>
   function generarContrasenia() {
     // Generar un número aleatorio de 3 dígitos
