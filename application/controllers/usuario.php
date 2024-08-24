@@ -65,7 +65,6 @@ class Usuario extends CI_Controller
 	}
 	public function intro()
 	{
-		//$this->load->view('inc/head');
 		/* 		$this->load->view('inc/menu'); */
 		$this->load->view('ind');
 		//$this->load->view('inc/footer');
