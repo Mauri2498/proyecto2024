@@ -11,7 +11,6 @@ $config['newline'] = "\r\n";
 $config['wordwrap'] = TRUE;
 
 
-//$config['smtp_from'] = array('email' => 'europa2498@gmail.com', 'name' => 'Consultorio Dental');
 
 
 
