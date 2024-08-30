@@ -68,7 +68,7 @@
             <li><a href="#contacto">Contacto</a></li>
 
 
-            <li id="reg"><a href="<?php echo base_url();?>index.php/usuario/login">Ingresar</a></li>
+            <li id="reg"><a href="<?php echo base_url();?>index.php/usuario/panel">Ingresar</a></li>
 <!--             <li id="reg"><a href="<?php echo base_url();?>index.php/usuario/agregar">Registrarse</a></li>
  -->
 
