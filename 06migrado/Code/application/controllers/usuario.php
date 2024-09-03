@@ -118,6 +118,68 @@ class Usuario extends CI_Controller
 		$this->usuario_model->agregarusuario($data);
 		//redirect('usuario/agregar'); // Redirige de vuelta al formulario
 	}
+	public function registrarYagendar()
+	{
+		$lista = $this->Servicios_model->listarservicios();
+		$data['servicios'] = $lista->result();
+		$this->load->view('inc/head');
+		$this->load->view('inc/menu');
+		$this->load->view('registrarYagendar', $data);
+		$this->load->view('inc/footer');
+	}
+	public function agregarbdYagendarbd()
+	{
+		//lado izquierda coincide con el nombre de la base de datos, de las columnas 
+		// el lado derecho es el name de el formulario 
+		$data['nombre'] = strtoupper($_POST['nombre']);
+		$data['apellidos'] = strtoupper($_POST['apellidos']);
+		$data['sexo'] = strtoupper($_POST['sexo']);
+		$data['fechaNac'] = $_POST['fechaNac'];
+		$data['celular'] = $_POST['celular'];
+		$data['correo'] = $_POST['correo'];
+		$data['usuario'] = $_POST['usuario'];
+		$password = $_POST['contrasenia'];
+		$data['clave'] = sha1($password);
+		$data['tipoUsuario'] = strtoupper($_POST['tipoUsuario']);
+		$data['estadoUsuario'] = 3;
+
+		$idservicios = $_POST['servicios_idservicios']; // Asegúrate de que este es el nombre correcto del campo
+		$fechaAtencion = $_POST['fechaAtencion'];
+		$horaAtencion = $_POST['horaAtencion'];
+
+		$result = $this->usuario_model->agregarYagendar($data, $idservicios, $fechaAtencion, $horaAtencion);
+
+		/* 		if ($result) {
+			$this->session->set_flashdata('success', 'Usuario registrado y cita agendada correctamente.');
+		} else {
+			$this->session->set_flashdata('error', 'Hubo un problema al registrar el usuario o agendar la cita.');
+		} */
+
+		echo json_encode(['success' => $result]);
+
+		// Enviar correo electrónico 
+		$this->load->library('email');
+		$this->email->from('europa2498@gmail.com', 'Consultorio Dental Reynolds');
+		$this->email->to($data['correo']);
+		$this->email->subject('Detalles de su cuenta');
+		$resetLink = site_url("usuario/login");
+		$this->email->message("Estimado/a {$data['nombre']} {$data['apellidos']},\n\n" .
+			"Su cuenta ha sido creada exitosamente. A continuación, le proporcionamos sus detalles de acceso:\n\n" .
+			"Usuario: {$data['usuario']}\n" .
+			"Contraseña: $password\n\n" .
+			"Haz clic en el siguiente enlace para poder acceder a su cuenta: <a href='" . $resetLink . "'>Link para entrar en el sistema</a>" .
+			//"Le recomendamos que cambie su contraseña después de iniciar sesión.\n\n". 
+			"Saludos cordiales,\n" .
+			"Consultorio Dental Reynolds");
+
+		if ($this->email->send()) {
+			$this->session->set_flashdata('success', 'Usuario registrado y correo enviado correctamente.');
+		} else {
+			$this->session->set_flashdata('error', 'Usuario registrado, pero no se pudo enviar el correo electrónico.');
+		}
+		//$this->usuario_model->agregarusuario($data);
+		//redirect('usuario/agregar'); // Redirige de vuelta al formulario 
+	}
 	public function agregarbdU()
 	{
 		//lado izquierda coincide con el nombre de la base de datos, de las columnas 
@@ -144,7 +206,7 @@ class Usuario extends CI_Controller
 			"Su cuenta ha sido creada exitosamente. A continuación, le proporcionamos sus detalles de acceso:\n\n" .
 			"Usuario: {$data['usuario']}\n" .
 			"Contraseña: $password\n\n" .
-			"Haz clic en el siguiente enlace para poder acceder a su cuenta: <a href='" . $resetLink . "'>Link para entrar en el sistema</a>".
+			"Haz clic en el siguiente enlace para poder acceder a su cuenta: <a href='" . $resetLink . "'>Link para entrar en el sistema</a>" .
 			//"Le recomendamos que cambie su contraseña después de iniciar sesión.\n\n". 
 			"Saludos cordiales,\n" .
 			"Consultorio Dental Reynolds");
@@ -164,21 +226,16 @@ class Usuario extends CI_Controller
 		$clave = sha1($_POST['clave']);
 
 		$consulta = $this->usuario_model->validar($usuario, $clave);
-		if ($consulta->num_rows() > 0)
-		{
-			foreach ($consulta->result() as $row)
-			{
-				if ($row->estadoUsuario === '3') 
-				{
+		if ($consulta->num_rows() > 0) {
+			foreach ($consulta->result() as $row) {
+				if ($row->estadoUsuario === '3') {
 					$this->session->set_userdata('idusuario', $row->idusuario);
-					$this->session->set_userdata('usuario', $row->usuario);	
+					$this->session->set_userdata('usuario', $row->usuario);
 					$this->session->set_userdata('nombre', $row->nombre);
 					$this->session->set_userdata('apellidos', $row->apellidos);
-					$this->session->set_userdata('tipoUsuario', $row->tipoUsuario);				
+					$this->session->set_userdata('tipoUsuario', $row->tipoUsuario);
 					redirect('usuario/cambiarContrasenia');
-				}
-				else
-				{
+				} else {
 					$this->session->set_userdata('idusuario', $row->idusuario);
 					$this->session->set_userdata('usuario', $row->usuario);
 					$this->session->set_userdata('nombre', $row->nombre);
@@ -187,9 +244,7 @@ class Usuario extends CI_Controller
 					redirect('usuario/panel', 'refresh');
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$data['error'] = 'El usuario o contraseña ingresados no son correctos.';
 			$this->load->view('login3', $data);
 		}
@@ -242,7 +297,7 @@ class Usuario extends CI_Controller
 
 		$data = array(
 			'clave' => sha1($nuevaContrasenia),
-			'estadoUsuario' => 1  
+			'estadoUsuario' => 1
 		);
 		$this->usuario_model->modificarUsuario($idusuario, $data);
 

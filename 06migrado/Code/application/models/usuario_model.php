@@ -35,7 +35,29 @@ class Usuario_model extends CI_Model {
         $this->db->where('clave', sha1($contrasenia)); 
         return $this->db->get();
     }
+	public function agregarYagendar($data, $idservicios, $fechaAtencion, $horaAtencion)
+	{
+		$this->db->trans_start();
 
+		$this->db->insert('usuario', $data);
+		$idUsuario = $this->db->insert_id();
+
+		$data2 = [
+			'servicios_idservicios' => $idservicios,
+			'usuario_idusuario' => $idUsuario,
+			'fechaAtencion' => $fechaAtencion,
+			'horaAtencion' => $horaAtencion
+		];
+		$this->db->insert('agendarCita', $data2);
+
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status() === FALSE) {
+			return false;
+		}
+
+		return true;
+	}
 	public function modificarUsuario($idusuario,$data)
 	{
 		$this->db->where('idusuario',$idusuario);

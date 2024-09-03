@@ -76,6 +76,19 @@
                         <div class="small-box-footer">Ver Servicios <i class="fas fa-arrow-circle-right"></i></div>
                     </a>
                 </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <a href="<?php echo site_url('usuario/registrarYagendar'); ?>" class="small-box bg-info">
+                        <div class="inner">
+                            <br><br>
+                            <p>Registrar y Agendar</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-tooth"></i>
+                        </div>
+                        <div class="small-box-footer">Registrar <i class="fas fa-arrow-circle-right"></i></div>
+                    </a>
+                </div>
             </div>
             <!-- /.row -->
             <!-- Main row -->
