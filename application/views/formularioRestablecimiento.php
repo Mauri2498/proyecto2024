@@ -74,7 +74,7 @@
             border-radius: 25px;
             padding: 0 35px;
             color: #666666;
-            height: 100%; /* Asegura que el contenedor del ícono tenga la altura completa del input */
+            height: 100%; 
             top: 0;
             left: 0; /* Ajusta la posición del ícono */
         }
