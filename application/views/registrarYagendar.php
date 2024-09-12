@@ -181,7 +181,6 @@
             const contraseniaAleatoria = generarContrasenia();
             $('#contrasenia').val(contraseniaAleatoria);
 
-            // Separar la fecha de nacimiento y la fecha de atención
             var today = new Date().toISOString().split('T')[0];
             $('#fechaAtencion').attr('min', today);
 
