@@ -4,7 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Servicios extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        //$this->load->model('Usuario_model'); 
         $this->load->model('Servicios_model'); 
 		$this->load->model('AgendarCita_model'); 
     }	
