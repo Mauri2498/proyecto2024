@@ -13,7 +13,6 @@
     $resultado = $conexionBD->conexion->query($sql);
 
     if ($resultado->num_rows > 0) {
-    /*datos de socio*/
     $fila = mysqli_fetch_assoc($resultado);
     $idUsuario = $fila['idUsuario'];
     $nombre = $fila['nombre'];
