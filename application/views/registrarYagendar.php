@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +13,6 @@
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
 <body>
     <div class="register-box">
         <div id="confirmationInsert" style="display: none;" class="alert alert-success alert-dismissible fade show" role="alert">
