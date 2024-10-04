@@ -104,19 +104,50 @@ class Usuario extends CI_Controller
 	}
 	public function agregarbd()
 	{
-		//lado izquierda coincide con el nombre de la base de datos, de las columnas
-		// el lado derecho es el name de el formulario
-		$data['nombre'] = strtoupper($_POST['nombre']); // 
-		$data['apellidos'] = strtoupper($_POST['apellidos']); // 
-		$data['sexo'] = strtoupper($_POST['sexo']); // 
-		$data['fechaNac'] = strtoupper($_POST['fechaNac']); // 
+		$this->load->model('Usuario_model');
+
+		$data['nombre'] = strtoupper($_POST['nombre']);
+		$data['apellidos'] = strtoupper($_POST['apellidos']);
+		$data['sexo'] = strtoupper($_POST['sexo']);
+		$data['fechaNac'] = $_POST['fechaNac']; // No es necesario convertir a mayúsculas una fecha 
 		$data['celular'] = $_POST['celular'];
-		$data['correo'] = $_POST['correo']; // 
-		$data['usuario'] = $_POST['usuario']; // 
-		$data['clave'] = sha1($_POST['contrasenia']); // 
-		$data['tipoUsuario'] = strtoupper($_POST['tipoUsuario']); // 
-		$this->usuario_model->agregarusuario($data);
-		//redirect('usuario/agregar'); // Redirige de vuelta al formulario
+		$data['correo'] = $_POST['correo'];
+		$data['usuario'] = $_POST['usuario'];
+		$password = $_POST['contrasenia'];
+		$data['clave'] = sha1($password);
+		$data['tipoUsuario'] = strtoupper($_POST['tipoUsuario']);
+		$data['estadoUsuario'] = 0;
+
+		$this->load->library('email');
+		$this->email->from('europa2498@gmail.com', 'Consultorio Dental Reynolds');
+		$this->email->to($data['correo']);
+		$this->email->subject('Detalles de su cuenta');
+		$this->email->message("Estimado/a {$data['nombre']} {$data['apellidos']},\n\n" .
+			"Su cuenta ha sido creada exitosamente. A continuación, le proporcionamos sus detalles de acceso:\n\n" .
+			"Usuario: {$data['usuario']}\n" .
+			"Contraseña: $password\n\n" .
+			"Haga clic en el siguiente enlace para activar su cuenta: <a href='" . site_url("usuario/activarCuenta/{$data['usuario']}") . "'>Verificar correo</a>\n\n" .
+			"Saludos cordiales,\n" .
+			"Consultorio Dental Reynolds");
+
+		if ($this->email->send()) {
+			$this->session->set_flashdata('success', 'Usuario registrado y correo enviado correctamente.');
+		} else {
+			$this->session->set_flashdata('error', 'Usuario registrado, pero no se pudo enviar el correo electrónico.');
+		}
+	}
+	public function activarCuenta($usuario)
+	{
+		$this->load->model('Usuario_model');
+		$usuarioData = $this->usuario_model->obtenerUsuarioPorNombre($usuario);
+
+		if ($usuarioData && $usuarioData->estadoUsuario == 0) {
+			$this->usuario_model->actualizarEstadoUsuario($usuarioData->idusuario, 3);
+			$this->session->set_flashdata('success', 'Su cuenta ha sido activada exitosamente.');
+		} else {
+			$this->session->set_flashdata('error', 'Cuenta inválida o ya está activada.');
+		}
+		redirect('usuario/login');
 	}
 	public function registrarYagendar()
 	{
@@ -207,7 +238,6 @@ class Usuario extends CI_Controller
 			"Usuario: {$data['usuario']}\n" .
 			"Contraseña: $password\n\n" .
 			"Haz clic en el siguiente enlace para poder acceder a su cuenta: <a href='" . $resetLink . "'>Link para entrar en el sistema</a>" .
-			//"Le recomendamos que cambie su contraseña después de iniciar sesión.\n\n". 
 			"Saludos cordiales,\n" .
 			"Consultorio Dental Reynolds");
 
@@ -253,7 +283,7 @@ class Usuario extends CI_Controller
 	{
 		if ($this->session->userdata('usuario')) {
 			$tipoUsuario = $this->session->userdata('tipoUsuario');
-			if ($tipoUsuario === 'DOCTOR') {
+			if ($tipoUsuario === 'DOCTORADMI') {
 				redirect('usuario/vistaDoctor', 'refresh');
 			} else {
 				redirect('usuario/vistaPaciente', 'refresh');
