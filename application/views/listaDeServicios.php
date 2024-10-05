@@ -16,15 +16,6 @@
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-
-    <!--     <div class="card-header">
-        <h3 class="card-title">Agregar Servicio</h3><br> <br>
-        <h3>
-            <a href="<?php echo base_url(); ?>index.php/servicios/servicio">
-                <button type="button" class="btn btn-primary">Agregar</button>
-            </a>
-        </h3>
-    </div> -->
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
