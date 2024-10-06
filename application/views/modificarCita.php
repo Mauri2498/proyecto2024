@@ -48,7 +48,6 @@
 </head>
 
 <body>
-  <!-- Menu (asegúrate de que esté bien implementado en inc/menu) -->
   <?php $this->load->view('inc/menu'); ?>
 
   <h1>Modificar Cita</h1>
