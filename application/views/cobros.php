@@ -90,9 +90,7 @@
         </div>
     </section>
 </div>
-<!-- /.content-wrapper -->
 
-<!-- Script to auto-fill the Monto field based on selected service and display patient details -->
 <script>
     $(document).ready(function() {
         $('#servicios_idservicios').on('change', function() {
