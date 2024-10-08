@@ -5,6 +5,7 @@ class Servicios_model extends CI_Model {
     public function listarservicios() {
         $this->db->select('*');
         $this->db->from('servicios');
+        $this->db->where_in('estadoServicio', [1]);
         return $this->db->get();
     }	
     
@@ -26,6 +27,8 @@ class Servicios_model extends CI_Model {
 
     public function eliminarServicio($idservicios) {
         $this->db->where('idservicios', $idservicios);
-        $this->db->delete('servicios');
+		$this->db->update('servicios', ['estadoServicio' => 0]);
     }
+
+    
 }

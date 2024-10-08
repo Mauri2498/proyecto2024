@@ -37,6 +37,24 @@ class Usuario_model extends CI_Model
 		$this->db->where('clave', sha1($contrasenia));
 		return $this->db->get();
 	}
+	public function agregarUsuarioYCita($userData, $citaData)
+	{
+		$this->db->trans_start();
+
+		// Insertar el nuevo usuario
+		$this->db->insert('usuario', $userData);
+		$userId = $this->db->insert_id();
+
+		// Agregar el ID del usuario a los datos de la cita
+		$citaData['usuario_idusuario'] = $userId;
+
+		// Insertar la cita
+		$this->db->insert('agendarcita', $citaData);
+
+		$this->db->trans_complete();
+
+		return $this->db->trans_status();
+	}
 	public function agregarYagendar($data, $idservicios, $fechaAtencion, $horaAtencion)
 	{
 		$this->db->trans_start();
@@ -172,7 +190,7 @@ class Usuario_model extends CI_Model
 	{
 		$this->db->where('usuario', $usuario);
 		$query = $this->db->get('usuario');
-		return $query->row(); // Retorna una fila como objeto 
+		return $query->row(); // Retorna una fila como objeto
 	}
 
 	public function actualizarEstadoUsuario($idusuario, $estado)

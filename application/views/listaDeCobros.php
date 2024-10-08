@@ -1,27 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lista de usuarios</title>
+<title>Lista De Cobros</title>
 
-  <style>
- body, html {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .register-box {
-      margin: auto;
-      width: 40%; 
-      padding: 30px;
-    }
-
-  </style>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -29,7 +7,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Usuarios</h1>
+                    <h1 class="m-0">Cobros</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right"></ol>
@@ -42,8 +20,6 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
-
             <!-- Campo confirmacion de registro -->
             <div id="confimacionInsert"></div>
 
@@ -74,7 +50,7 @@
                 <div class="col-10">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Lista De Usuarios</h3>
+                            <h3 class="card-title">Lista De Cobros</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -82,39 +58,25 @@
                                 <thead>
                                     <tr>
                                         <th>No.</th>
-                                        <th>Nombre</th>
-                                        <th>Apellidos</th>
-                                        <th>Sexo</th>
-                                        <th>Fecha De Nacimiento</th>
-                                        <th>Celular</th>
-                                        <th>Tipo De Usuario</th>
-                                        <th>Usuario</th>
-                                        <th>Editar</th>
-                                        <th>Eliminar</th>
+                                        <th>Paciente</th>
+                                        <th>Tipo de Atención</th>
+                                        <th>Fecha del Pago</th>
+                                        <th>Total</th>
+                                        <th>Monto Pagado</th>
+                                        <th>Deuda</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $contador = 1; ?>
-                                    <?php foreach ($usuarios as $usuario): ?>
+                                    <?php foreach ($cobros as $cobro): ?>
                                         <tr>
                                             <td><?php echo $contador; ?></td>
-                                            <td><?php echo $usuario->nombre?></td>
-                                            <td><?php echo $usuario->apellidos?></td>
-                                            <td><?php echo $usuario->sexo; ?></td>
-                                            <td><?php echo formatearFecha($usuario->fechaNac); ?></td>
-                                            <td><?php echo $usuario->celular; ?></td>
-                                            <td><?php echo $usuario->tipoUsuario; ?></td>
-                                            <td><?php echo $usuario->usuario; ?></td>
-                                            <td>
-                                                <?php echo form_open_multipart("usuario/modificarU"); ?>
-                                                <input type="hidden" name="idusuario" value="<?php echo $usuario->idusuario; ?>">
-                                                <button type="submit" class="btn btn-warning fas fa-edit"></button>
-                                                <?php echo form_close(); ?>
-                                            </td>
-                                            <td>
-                                            <button type="button" class="btn btn-danger fas fa-trash-alt" data-toggle="modal" data-target="#confirmDeleteModal" data-id="<?php echo $usuario->idusuario; ?>"></button>
-
-                                            </td>
+                                            <td><?php echo $cobro->nombrePaciente . ' ' . $cobro->apellidoPaciente; ?></td>
+                                            <td><?php echo $cobro->tipoAtencion; ?></td>
+                                            <td><?php echo date('d-m-Y', strtotime($cobro->fechaCobro)); ?></td>
+                                            <td><?php echo number_format($cobro->total, 2); ?> Bs.</td>
+                                            <td><?php echo number_format($cobro->monto, 2); ?> Bs.</td>
+                                            <td><?php echo number_format($cobro->deuda, 2); ?> Bs.</td>
                                         </tr>
                                         <?php $contador++; ?>
                                     <?php endforeach; ?>
@@ -122,15 +84,12 @@
                                 <tfoot>
                                     <tr>
                                         <th>No.</th>
-                                        <th>Nombre</th>
-                                        <th>Apellidos</th>
-                                        <th>Sexo</th>
-                                        <th>Fecha De Nacimiento</th>
-                                        <th>Celular</th>
-                                        <th>Tipo De Usuario</th>
-                                        <th>Usuario</th>
-                                        <th>Editar</th>
-                                        <th>Eliminar</th>
+                                        <th>Paciente</th>
+                                        <th>Tipo de Atención</th>
+                                        <th>Fecha del Pago</th>
+                                        <th>Total</th>
+                                        <th>Monto Pagado</th>
+                                        <th>Deuda</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -146,6 +105,7 @@
     <!-- /.content -->
 </div>
 
+<!-- Modal de confirmación de eliminación -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -156,11 +116,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de eliminar este usuario?
+                ¿Estás seguro de que quieres eliminar este cobro?
             </div>
             <div class="modal-footer">
-                <?php echo form_open_multipart("usuario/eliminarbdU"); ?>
-                <input type="hidden" name="idusuario" id="deleteUserId" value="">
+                <?php echo form_open_multipart("cobros/eliminarbd"); ?>
+                <input type="hidden" name="idcobro" id="deleteCobroId" value="">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="submit" class="btn btn-danger">Eliminar</button>
                 <?php echo form_close(); ?>
@@ -168,7 +128,7 @@
         </div>
     </div>
 </div>
-<!-- /.content-wrapper -->
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -178,11 +138,11 @@
             $('#errorModal').modal('show');
         <?php endif; ?>
 
-        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+        $('#confirmDeleteModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
-            var userId = button.data('id');
+            var cobroId = button.data('id');
             var modal = $(this);
-            modal.find('#deleteUserId').val(userId);
+            modal.find('#deleteCobroId').val(cobroId);
         });
     });
 </script>

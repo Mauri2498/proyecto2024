@@ -1,4 +1,28 @@
-<title>Agenda De Citas</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agenda de citas</title>
+
+  <style>
+ body, html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .register-box {
+      margin: auto;
+      width: 40%; 
+      padding: 30px;
+    }
+
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">

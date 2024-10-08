@@ -6,7 +6,7 @@ class Usuario extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		//$this->load->model('Usuario_model'); 
+		$this->load->model('Usuario_model');
 		$this->load->model('Servicios_model');
 		$this->load->model('AgendarCita_model');
 	}
@@ -71,27 +71,40 @@ class Usuario extends CI_Controller
 		//$this->load->view('inc/footer');
 		//$this->load->view('inc/pie');
 	}
-
-	public function vistaDoctor()
+	public function vistaDoctorAdmin()
 	{
 		$this->load->view('inc/head');
 		$this->load->view('inc/menu');
 		$this->load->view('main');
 		$this->load->view('inc/footer');
 	}
+	public function vistaDoctor()
+	{
+		$this->load->view('inc/head');
+		$this->load->view('inc/menu');
+		$this->load->view('main2');
+		$this->load->view('inc/footer');
+	}
+
 	public function vistaPaciente()
 	{
 		$this->load->view('temp/headerTemp');
 		$this->load->view('temp/mainTemp');
 		$this->load->view('temp/footerTemp');
 	}
-
 	public function agregar()
 	{
 		$this->load->view('inc/head');
 		$this->load->view('inc/menu');
 		$this->load->view('formulario');
-		//$this->load->view('inc/footer');
+		$this->load->view('inc/footer');
+	}
+	public function agregarU()
+	{
+		$this->load->view('inc/head');
+		$this->load->view('inc/menu');
+		$this->load->view('formularioU');
+		$this->load->view('inc/footer');
 	}
 	public function agregarR()
 	{
@@ -104,17 +117,14 @@ class Usuario extends CI_Controller
 	}
 	public function agregarbd()
 	{
-		$this->load->model('Usuario_model');
-
 		$data['nombre'] = strtoupper($_POST['nombre']);
 		$data['apellidos'] = strtoupper($_POST['apellidos']);
 		$data['sexo'] = strtoupper($_POST['sexo']);
-		$data['fechaNac'] = $_POST['fechaNac']; // No es necesario convertir a mayúsculas una fecha 
+		$data['fechaNac'] = $_POST['fechaNac']; // No es necesario convertir a mayúsculas una fecha
 		$data['celular'] = $_POST['celular'];
 		$data['correo'] = $_POST['correo'];
 		$data['usuario'] = $_POST['usuario'];
-		$password = $_POST['contrasenia'];
-		$data['clave'] = sha1($password);
+		$data['clave'] = sha1($_POST['contrasenia']); // Considera usar password_hash() para mayor seguridad
 		$data['tipoUsuario'] = strtoupper($_POST['tipoUsuario']);
 		$data['estadoUsuario'] = 0;
 
@@ -135,18 +145,24 @@ class Usuario extends CI_Controller
 		} else {
 			$this->session->set_flashdata('error', 'Usuario registrado, pero no se pudo enviar el correo electrónico.');
 		}
+		$this->usuario_model->agregarusuario($data);
+
 	}
 	public function activarCuenta($usuario)
 	{
+		// Aquí buscamos al usuario por su nombre de usuario
 		$this->load->model('Usuario_model');
 		$usuarioData = $this->usuario_model->obtenerUsuarioPorNombre($usuario);
 
 		if ($usuarioData && $usuarioData->estadoUsuario == 0) {
+			// Si el estado del usuario es 0 (inactivo), lo activamos
 			$this->usuario_model->actualizarEstadoUsuario($usuarioData->idusuario, 3);
 			$this->session->set_flashdata('success', 'Su cuenta ha sido activada exitosamente.');
 		} else {
 			$this->session->set_flashdata('error', 'Cuenta inválida o ya está activada.');
 		}
+
+		// Redirigimos al login o a otra página
 		redirect('usuario/login');
 	}
 	public function registrarYagendar()
@@ -226,7 +242,6 @@ class Usuario extends CI_Controller
 		$data['clave'] = sha1($password);
 		$data['tipoUsuario'] = strtoupper($_POST['tipoUsuario']);
 		$data['estadoUsuario'] = 3;
-
 		// Enviar correo electrónico 
 		$this->load->library('email');
 		$this->email->from('europa2498@gmail.com', 'Consultorio Dental Reynolds');
@@ -238,6 +253,7 @@ class Usuario extends CI_Controller
 			"Usuario: {$data['usuario']}\n" .
 			"Contraseña: $password\n\n" .
 			"Haz clic en el siguiente enlace para poder acceder a su cuenta: <a href='" . $resetLink . "'>Link para entrar en el sistema</a>" .
+			//"Le recomendamos que cambie su contraseña después de iniciar sesión.\n\n". 
 			"Saludos cordiales,\n" .
 			"Consultorio Dental Reynolds");
 
@@ -283,16 +299,28 @@ class Usuario extends CI_Controller
 	{
 		if ($this->session->userdata('usuario')) {
 			$tipoUsuario = $this->session->userdata('tipoUsuario');
-			if ($tipoUsuario === 'DOCTORADMI') {
-				redirect('usuario/vistaDoctor', 'refresh');
-			} else {
-				redirect('usuario/vistaPaciente', 'refresh');
+
+			switch ($tipoUsuario) {
+				case 'ADMINISTRADOR':
+					redirect('usuario/vistaDoctorAdmin', 'refresh');
+					break;
+				case 'DOCTOR':
+					redirect('usuario/vistaDoctor', 'refresh');
+					break;
+				case 'PACIENTE':
+					redirect('usuario/vistaPaciente', 'refresh');
+					break;
+				default:
+					// Si el tipo de usuario no es reconocido, redirigir al login
+					redirect('usuario/login', 'refresh');
+					break;
 			}
 		} else {
 			// Si no hay sesión iniciada, redirigir al login
 			redirect('usuario/login', 'refresh');
 		}
 	}
+
 	public function logout()
 	{
 		$this->session->sess_destroy();
@@ -334,8 +362,6 @@ class Usuario extends CI_Controller
 		$this->session->set_flashdata('success', 'Contraseña cambiada exitosamente.');
 		redirect('usuario/logout');
 	}
-
-
 	public function solicitarRestablecimiento()
 	{
 		$this->load->view('solicitarRestablecimiento');
@@ -344,8 +370,6 @@ class Usuario extends CI_Controller
 	{
 		$this->load->view('formularioRestablecimiento');
 	}
-
-
 	public function procesarRestablecimiento()
 	{
 		$correo = $this->input->post('correo');
@@ -376,25 +400,20 @@ class Usuario extends CI_Controller
 	public function enviarEnlaceRestablecimiento()
 	{
 		$correo = $this->input->post('correo');
-
 		// Verifica si el correo está registrado en la base de datos
 		if (!$this->usuario_model->obtenerUsuarioPorCorreo($correo)) {
 			$this->session->set_flashdata('error', 'El correo ingresado no está registrado en nuestro sistema.');
 			redirect('usuario/solicitarRestablecimiento');
 			return;
 		}
-
 		// Genera un token para restablecimiento de contraseña
 		$token = $this->usuario_model->generarTokenRestablecimiento($correo);
-
 		$this->load->library('email');
-
 		$this->email->from('europa2498@gmail.com', 'Consultorio Dental Reynolds');
 		$this->email->to($correo);
 		$this->email->subject('Restablecimiento de Contraseña');
 		$resetLink = site_url("usuario/restablecerContrasenia/$token");
 		$this->email->message("Haz clic en el siguiente enlace para restablecer tu contraseña: <a href='" . $resetLink . "'>Link para poder restablecer la Contraseña</a>");
-
 		if (!$this->email->send()) {
 			$error = $this->email->print_debugger(array('headers'));
 			log_message('error', 'Error al enviar correo: ' . $error);
@@ -402,11 +421,9 @@ class Usuario extends CI_Controller
 			redirect('usuario/solicitarRestablecimiento');
 			return;
 		}
-
 		$this->session->set_flashdata('success', 'Se ha enviado un enlace de restablecimiento a tu correo electrónico.');
 		redirect('usuario/solicitarRestablecimiento');
 	}
-
 	public function restablecerContrasenia($token)
 	{
 		$idusuario = $this->usuario_model->verificarToken($token);
@@ -417,7 +434,6 @@ class Usuario extends CI_Controller
 			echo "Token inválido o expirado";
 		}
 	}
-
 	public function actualizarContrasenia()
 	{
 		$nuevaContrasenia = $this->input->post('nuevaContrasenia');

@@ -33,6 +33,7 @@ class Servicios extends CI_Controller {
 
     public function agregarbd() {
         $data['nombreServicio'] = strtoupper($this->input->post('nombreServicio'));
+		$data['costo'] = $this->input->post('costoServicio');
         $this->Servicios_model->agregarservicio($data);
         redirect('servicios/listaServicios');
     }
@@ -49,6 +50,7 @@ class Servicios extends CI_Controller {
     public function modificarbd() {
         $idservicios = $this->input->post('idservicios');
         $data['nombreServicio'] = strtoupper($this->input->post('nombreServicio'));
+		$data['costo'] = $this->input->post('costoServicio');
         $this->Servicios_model->modificarServicio($idservicios, $data);
         redirect('servicios/listaServicios');
     }

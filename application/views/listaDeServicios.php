@@ -17,14 +17,14 @@
     </div>
     <!-- /.content-header -->
 
-    <div class="card-header">
-                            <h3 class="card-title">Agregar Servicio</h3><br> <br>
-                            <h3>
-                                <a href="<?php echo base_url();?>index.php/servicios/servicio">
-                                    <button type="button" class="btn btn-primary">Agregar</button>
-                                </a>
-                            </h3>
-                        </div>
+    <!--     <div class="card-header">
+        <h3 class="card-title">Agregar Servicio</h3><br> <br>
+        <h3>
+            <a href="<?php echo base_url(); ?>index.php/servicios/servicio">
+                <button type="button" class="btn btn-primary">Agregar</button>
+            </a>
+        </h3>
+    </div> -->
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -69,9 +69,9 @@
                                     <tr>
                                         <th>No.</th>
                                         <th>Nombre Del Servicio</th>
+                                        <th>Costo Bs.</th>
                                         <th>Editar</th>
                                         <th>Eliminar</th>
-                                        <th>Deshabilitar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -79,7 +79,8 @@
                                     <?php foreach ($servicios as $servicio): ?>
                                         <tr>
                                             <td><?php echo $contador; ?></td>
-                                            <td><?php echo $servicio->nombreServicio?></td>
+                                            <td><?php echo $servicio->nombreServicio ?></td>
+                                            <td><?php echo $servicio->costo; ?> Bs.</td>
                                             <td>
                                                 <?php echo form_open_multipart("servicios/modificar"); ?>
                                                 <input type="hidden" name="idservicios" value="<?php echo $servicio->idservicios; ?>">
@@ -87,15 +88,9 @@
                                                 <?php echo form_close(); ?>
                                             </td>
                                             <td>
-                                            <button type="button" class="btn btn-danger fas fa-trash-alt" data-toggle="modal" data-target="#confirmDeleteModal" data-id="<?php echo $servicio->idservicios; ?>"></button>
+                                                <button type="button" class="btn btn-danger fas fa-trash-alt" data-toggle="modal" data-target="#confirmDeleteModal" data-id="<?php echo $servicio->idservicios; ?>"></button>
                                             </td>
 
-                                            <td>
-                                                <?php echo form_open_multipart("servicios/deshabilitarbd");?>
-                                                <input type="hidden" name="idagendarcita" value="<?php echo $servicio->idservicios;?>">
-                                                <button type="submit" class="btn btn-success" >Deshabilitar</button>
-                                                <?php echo form_close();?>				
-                                            </td>
                                         </tr>
                                         <?php $contador++; ?>
                                     <?php endforeach; ?>
@@ -104,9 +99,9 @@
                                     <tr>
                                         <th>No.</th>
                                         <th>Nombre Del Servicio</th>
+                                        <th>Costo Bs.</th>
                                         <th>Editar</th>
                                         <th>Eliminar</th>
-                                        <th>Deshabilitar</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -154,7 +149,7 @@
             $('#errorModal').modal('show');
         <?php endif; ?>
 
-        $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+        $('#confirmDeleteModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var userId = button.data('id');
             var modal = $(this);

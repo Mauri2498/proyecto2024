@@ -44,6 +44,15 @@
         </div>
       </div>
 
+      <div class="input-group mb-3">
+          <input type="number" name="costoServicio" id="costoServicio" class="form-control" placeholder="Costo del Servicio Bs." required>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-dollar-sign"></span>
+            </div>
+          </div>
+        </div>
+        
       <div class="row">
         <div class="col-6">
           <button type="submit" class="btn btn-primary btn-block">Registrar</button>

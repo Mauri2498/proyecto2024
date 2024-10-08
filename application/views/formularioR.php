@@ -75,6 +75,14 @@
         </div>
       </div>
       <div class="input-group mb-3">
+        <input type="email" name="correo" id="correo" class="form-control" placeholder="Correo electrónico">
+        <div class="input-group-append">
+          <div class="input-group-text">
+          <span class="fas fa-envelope"></span>
+          </div>
+        </div>
+      </div>
+      <div class="input-group mb-3">
         <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Nombre De Usuario">
         <div class="input-group-append">
           <div class="input-group-text">

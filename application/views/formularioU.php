@@ -103,7 +103,7 @@
         </div>
       </div>
 
-      <div class="input-group mb-3" id="tipo" style="display: none;">
+      <div class="input-group mb-3" id="tipo" style="">
         <select class="form-control" name="tipoUsuario" id="tipoUsuario">
           <option value="Paciente">PACIENTE</option>
           <option value="Doctor">DOCTOR</option>

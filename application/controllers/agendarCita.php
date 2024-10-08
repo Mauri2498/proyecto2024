@@ -41,7 +41,7 @@ class AgendarCita extends CI_Controller {
 		$this->load->view('inc/head');
 		$this->load->view('inc/menu');
 		$this->load->view('modificarCita',$data);
-		//$this->load->view('inc/footer');
+		$this->load->view('inc/footer');
 	}
 	public function modificarbd()
 	{
@@ -59,6 +59,7 @@ class AgendarCita extends CI_Controller {
 	public function listaCitas()
 	{
 		$data['citas'] = $this->agendarCita_Model->getCitas();
+		
 		$this->load->view('inc/head');
 		$this->load->view('inc/menu');
 		$this->load->view('listaDeCitas', $data);
@@ -68,7 +69,7 @@ class AgendarCita extends CI_Controller {
 	public function deshabilitarbd()
 	{
 		$idagendarcita=$_POST['idagendarcita']; 
-		$data['estadoCita']='0';
+		$data['estadoCita']='2';
 		$this->agendarCita_Model->modificarEstadoCita($idagendarcita,$data);
 		redirect('agendarCita/listaCitas','refresh');
 	}
@@ -82,13 +83,15 @@ class AgendarCita extends CI_Controller {
 	public function eliminarbd()
 	{
 		$idagendarcita=$_POST['idagendarcita']; 
-		$this->agendarCita_Model->eliminarcita($idagendarcita);
+		$data['estadoCita']='0';
+		$this->agendarCita_Model->modificarEstadoCita($idagendarcita,$data);
 		redirect('agendarCita/listaCitas','refresh');
 	}
 	public function eliminarbdAtendidos()
 	{
 		$idagendarcita=$_POST['idagendarcita']; 
-		$this->agendarCita_Model->eliminarcita($idagendarcita);
+		$data['estadoCita']='0';
+		$this->agendarCita_Model->modificarEstadoCita($idagendarcita,$data);
 		redirect('agendarCita/citasatendidas','refresh');
 	}
 	public function citasatendidas()
@@ -99,5 +102,6 @@ class AgendarCita extends CI_Controller {
 		$this->load->view('atendidos', $data);
 		$this->load->view('inc/footer');
 	}
+
 
 }

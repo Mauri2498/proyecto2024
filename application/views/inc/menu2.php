@@ -30,17 +30,7 @@
         </div>
 
         <!-- Sidebar Menu -->
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
-                <li class="nav-item menu-open">
-                    <a href="<?php echo base_url();?>index.php/usuario/listaUsuarios" class="nav-link">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>Usuarios</p>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
@@ -98,6 +88,7 @@
     .dropdown-toggle {
         cursor: pointer;
     }
+    
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

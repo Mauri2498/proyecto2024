@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4 d-flex flex-column">
     <!-- Brand Logo -->
-    <a href="<?php echo base_url();?>index.php/usuario/vistaDoctor" class="brand-link">
+    <a href="<?php echo base_url();?>index.php/usuario/panel" class="brand-link">
         <img src="<?php echo base_url(); ?>adminlte/dist/img/consultorio.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Consultorio Dental</span>
     </a>
@@ -34,9 +34,30 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
                 <li class="nav-item menu-open">
-                    <a href="<?php echo base_url();?>index.php/usuario/listaUsuarios" class="nav-link">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>Usuarios</p>
+                    <a href="<?php echo base_url();?>index.php/agendarCita/listaCitas" class="nav-link">
+                        <i class="nav-icon fas fa-list"></i>
+                        <p>Lista de citas</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                <li class="nav-item menu-open">
+                    <a href="<?php echo base_url();?>index.php/servicios/listaServicios" class="nav-link">
+                        <i class="nav-icon fas fa-list"></i>
+                        <p>Lista de servicios</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item menu-open">
+                    <a href="<?php echo base_url();?>index.php/cobros/listaCobros" class="nav-link">
+                        <i class="nav-icon fas fa-list"></i>
+                        <p>Lista de cobros</p>
                     </a>
                 </li>
             </ul>
@@ -52,7 +73,6 @@
                 </li>
             </ul>
         </nav>
-
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
@@ -66,11 +86,11 @@
         </nav>
     </div>
 
-<!--     <div class="sidebar-footer mt-auto p-3">
+    <div class="sidebar-footer mt-auto p-3">
         <a href="<?php echo base_url();?>index.php/usuario/logout" class="btn btn-danger btn-block">
             Cerrar sesión
         </a>
-    </div> -->
+    </div>
 </aside>
 
 <style>
@@ -98,6 +118,7 @@
     .dropdown-toggle {
         cursor: pointer;
     }
+    
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

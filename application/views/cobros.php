@@ -12,9 +12,7 @@
                     <h1>Registro Cobros</h1>
                 </div>
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-
-                    </ol>
+                    <ol class="breadcrumb float-sm-right"></ol>
                 </div>
             </div>
         </div><!-- /.container-fluid -->
@@ -25,7 +23,7 @@
         <div class="row">
             <div class="col-1"></div>
             <div class="col-8">
-                <form action="" method="post">
+                <form action="" method="post" id="formCobro">
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
@@ -42,30 +40,26 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="usuario_idusuario">Paciente</label>
-                                <select class="form-control" name="usuario_idusuario" id="usuario_idusuario">
+                                <select class="form-control" name="usuario_idusuario" id="usuario_idusuario" onChange="mostrarDetallePaciente(this.value);">
                                     <option value="0">Seleccionar Paciente</option>
                                     <?php foreach ($pacientes as $paciente): ?>
                                         <option value="<?= $paciente->idusuario ?>"><?= $paciente->nombre ?> <?= $paciente->apellidos ?></option>
                                     <?php endforeach; ?>
+                                    
                                 </select>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-6">
                             <div class="form-group">
-                                <label for="monto">Monto Bs.</label>
+                                <label for="monto">Monto a Pagar Bs.</label>
                                 <input type="text" class="form-control" name="monto" id="monto" aria-describedby="helpId" placeholder="Monto (Bs)">
                             </div>
                         </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="deuda">Deuda</label>
-                                <input type="text" class="form-control" name="deuda" id="deuda" aria-describedby="helpId" placeholder="Deuda (Bs)">
-                            </div>
-                        </div>
-                        <div class="col-4">
+
+                        <div class="col-6">
                             <div class="form-group">
                                 <label for="fecha">Fecha</label>
                                 <input type="date" class="form-control" name="fecha" id="fecha" aria-describedby="helpId">
@@ -78,23 +72,86 @@
                         <textarea class="form-control" name="descripcion" id="descripcion" rows="3" placeholder="Descripción del Cobro"></textarea>
                     </div>
 
-                    <button type="button" class="btn btn-primary" onClick="cobrar();">Registrar Cobro</button>
+                    <button type="button" class="btn btn-primary" onClick="registrarCobro();">Registrar Cobro</button>
                 </form>
             </div>
             <div class="col-3"></div>
         </div>
     </section>
-    <!-- /.content -->
+
+    <!-- Div to display patient details -->
+    <section class="content">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <div id="detallePaciente"></div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+    </section>
 </div>
 <!-- /.content-wrapper -->
 
-<!-- Script to auto-fill the Monto field based on selected service -->
+<!-- Script to auto-fill the Monto field based on selected service and display patient details -->
 <script>
-  $(document).ready(function() {
-    $('#servicios_idservicios').on('change', function() {
-      var selectedOption = $(this).find('option:selected');
-      var costo = selectedOption.data('costo');
-      $('#monto').val(costo);
+    $(document).ready(function() {
+        $('#servicios_idservicios').on('change', function() {
+            var selectedOption = $(this).find('option:selected');
+            var costo = selectedOption.data('costo');
+            $('#monto').val(costo);
+        });
     });
-  });
+
+    function mostrarDetallePaciente(idUsuario) {
+        if (idUsuario == 0) {
+            $('#detallePaciente').html('');
+            return;
+        }
+
+        $.ajax({
+            url: '<?= site_url("cobros/detallePaciente") ?>',
+            type: 'POST',
+            data: { idUsuario: idUsuario },
+            success: function(response) {
+                $('#detallePaciente').html(response);
+            },
+            error: function() {
+                alert('Error al obtener detalles del paciente.');
+            }
+        });
+    }
+
+    function registrarCobro() {
+    var idUsuario = $('#usuario_idusuario').val();
+    var idServicio = $('#servicios_idservicios').val();
+    var monto = $('#monto').val();
+    var fecha = $('#fecha').val();
+    var descripcion = $('#descripcion').val();
+
+    $.ajax({
+        url: '<?= site_url("cobros/registrarCobro") ?>',
+        type: 'POST',
+        data: {
+            usuario_idusuario: idUsuario,
+            servicios_idservicios: idServicio,
+            monto: monto,
+            fecha: fecha,
+            descripcion: descripcion
+        },
+        success: function(response) {
+            const result = JSON.parse(response);
+            if (result.error) {
+                alert(result.error);
+            } else {
+                alert(result.success + '\nTotal pagado: ' + result.montoPagado + ' Bs.\nDeuda restante: ' + result.deudaRestante + ' Bs.');
+                mostrarDetallePaciente(idUsuario);
+                // Limpiar el formulario
+                $('#formCobro')[0].reset();
+            }
+        },
+        error: function() {
+            alert('Error al comunicarse con el servidor.');
+        }
+    });
+}
 </script>

@@ -153,7 +153,7 @@
                         <button type="submit" class="btn btn-primary btn-block">Registrar y Agendar</button>
                     </div>
                     <div class="col-6">
-                        <a href="<?php echo site_url("usuario/vistaDoctor"); ?>" class="btn btn-primary btn-block">Volver</a>
+                        <a href="<?php echo site_url("usuario/panel"); ?>" class="btn btn-primary btn-block">Volver</a>
                     </div>
                 </div>
 
@@ -243,52 +243,53 @@
         });
 
         $(document).ready(function() {
-            var diaSelect = $('#dia');
-            var mesSelect = $('#mes');
-            var anioSelect = $('#anio');
-            var fechaAtencionInput = $('#fechaNac');
+    var diaSelect = $('#dia');
+    var mesSelect = $('#mes');
+    var anioSelect = $('#anio');
+    var fechaAtencionInput = $('#fechaNac');
 
-            // Poblar los días (1-31)
-            for (var i = 1; i <= 31; i++) {
-                diaSelect.append($('<option>', {
-                    value: i.toString().padStart(2, '0'),
-                    text: i.toString().padStart(2, '0')
-                }));
-            }
+    // Poblar los días (1-31)
+    for (var i = 1; i <= 31; i++) {
+        diaSelect.append($('<option>', {
+            value: i.toString().padStart(2, '0'),
+            text: i.toString().padStart(2, '0')
+        }));
+    }
 
-            // Poblar los meses (1-12)
-            for (var i = 1; i <= 12; i++) {
-                mesSelect.append($('<option>', {
-                    value: i.toString().padStart(2, '0'),
-                    text: i.toString().padStart(2, '0')
-                }));
-            }
+    // Poblar los meses (1-12)
+    for (var i = 1; i <= 12; i++) {
+        mesSelect.append($('<option>', {
+            value: i.toString().padStart(2, '0'),
+            text: i.toString().padStart(2, '0')
+        }));
+    }
 
-            // Poblar los años (por ejemplo, de 1900 al año actual)
-            var currentYear = new Date().getFullYear();
-            for (var i = currentYear; i >= 1900; i--) {
-                anioSelect.append($('<option>', {
-                    value: i,
-                    text: i
-                }));
-            }
+    // Poblar los años (por ejemplo, de 1900 al año actual)
+    var currentYear = new Date().getFullYear();
+    for (var i = currentYear; i >= 1900; i--) {
+        anioSelect.append($('<option>', {
+            value: i,
+            text: i
+        }));
+    }
 
-            // Función para actualizar el input oculto
-            function actualizarFechaAtencion() {
-                var dia = diaSelect.val();
-                var mes = mesSelect.val();
-                var anio = anioSelect.val();
-                fechaAtencionInput.val(anio + '-' + mes + '-' + dia);
-            }
+    // Función para actualizar el input oculto
+    function actualizarFechaAtencion() {
+        var dia = diaSelect.val();
+        var mes = mesSelect.val();
+        var anio = anioSelect.val();
+        fechaAtencionInput.val(anio + '-' + mes + '-' + dia);
+    }
 
-            // Escuchar cambios en los selects
-            diaSelect.change(actualizarFechaAtencion);
-            mesSelect.change(actualizarFechaAtencion);
-            anioSelect.change(actualizarFechaAtencion);
+    // Escuchar cambios en los selects
+    diaSelect.change(actualizarFechaAtencion);
+    mesSelect.change(actualizarFechaAtencion);
+    anioSelect.change(actualizarFechaAtencion);
 
-            // Inicializar el valor
-            actualizarFechaAtencion();
-        });
+    // Inicializar el valor
+    actualizarFechaAtencion();
+});
+
     </script>
     <!-- jQuery -->
     <script src="<?php echo base_url(); ?>adminlte/plugins/jquery/jquery.min.js"></script>
