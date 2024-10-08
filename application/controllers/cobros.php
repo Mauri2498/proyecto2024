@@ -5,11 +5,11 @@ class Cobros extends CI_Controller {
     public function listaCobros() {
         $this->load->model('Cobro_model');
         $lista = $this->Cobro_model->listacobros();
-        $data['cobros'] = $lista->result(); // Cambié la variable a 'cobros' para mayor claridad
+        $data['cobros'] = $lista->result(); 
 
         $this->load->view('inc/head');
         $this->load->view('inc/menu');
-        $this->load->view('listaDeCobros', $data); // Asegúrate de que la vista se llama correctamente
+        $this->load->view('listaDeCobros', $data); 
         $this->load->view('inc/footer');
     }
 	public function detallePaciente() {
@@ -58,19 +58,17 @@ class Cobros extends CI_Controller {
             return;
         }
     
-        // Calcular el total y la deuda restante
         $detallesPaciente = $this->Cobro_model->obtenerDetallesPaciente($idUsuario);
-        $totalPagado = $detallesPaciente->pagado + $montoPagado; // Acumulamos lo que ya ha pagado más el nuevo cobro
+        $totalPagado = $detallesPaciente->pagado + $montoPagado; 
         $deudaRestante = $detallesPaciente->total - $totalPagado;
     
-        // Datos a insertar en la tabla cobro
         $data = [
             'fechaCobro' => $fecha,
             'monto' => $montoPagado,
             'descripcion' => $descripcion,
             'agendarcita_idagendarcita' => $idAgendaCita,
-            'total' => $detallesPaciente->total,  // Total del servicio
-            'deuda' => $deudaRestante             // Deuda restante
+            'total' => $detallesPaciente->total,  
+            'deuda' => $deudaRestante             
         ];
     
         if ($this->Cobro_model->guardarCobro($data)) {
@@ -83,9 +81,4 @@ class Cobros extends CI_Controller {
             echo json_encode(['error' => 'Error al registrar el cobro en la base de datos.']);
         }
     }
-    
-	
-	
-	
-	
 }
