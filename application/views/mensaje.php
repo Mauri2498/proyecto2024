@@ -20,7 +20,6 @@
             </div>
         </div>
     </div>
-
     <script src="<?php echo base_url(); ?>Login1/vendor/jquery/jquery-3.2.1.min.js"></script>
     <script src="<?php echo base_url(); ?>Login1/vendor/bootstrap/js/popper.js"></script>
     <script src="<?php echo base_url(); ?>Login1/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -32,6 +31,5 @@
         })
     </script>
     <script src="<?php echo base_url(); ?>Login1/js/main.js"></script>
-
 </body>
 </html>
