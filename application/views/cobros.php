@@ -25,7 +25,7 @@
             <div class="col-8">
                 <form action="" method="post" id="formCobro">
                     <div class="row">
-                        <div class="col-6">
+<!--                         <div class="col-6">
                             <div class="form-group">
                                 <label for="servicios_idservicios">Servicio</label>
                                 <select class="form-control" name="servicios_idservicios" id="servicios_idservicios">
@@ -35,7 +35,7 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-6">
                             <div class="form-group">
@@ -51,7 +51,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="monto">Monto a Pagar Bs.</label>
@@ -65,12 +65,12 @@
                                 <input type="date" class="form-control" name="fecha" id="fecha" aria-describedby="helpId">
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="descripcion">Descripción</label>
                         <textarea class="form-control" name="descripcion" id="descripcion" rows="3" placeholder="Descripción del Cobro"></textarea>
-                    </div>
+                    </div> -->
 
                     <button type="button" class="btn btn-primary" onClick="registrarCobro();">Registrar Cobro</button>
                 </form>
