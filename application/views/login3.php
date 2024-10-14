@@ -93,16 +93,13 @@
 			</div>
 		</div>
 	</div>
-
-
-
 	<script>
     document.addEventListener('DOMContentLoaded', function() {
         var errorMessage = document.getElementById('error-message');
         if (errorMessage) {
             setTimeout(function() {
                 errorMessage.classList.add('hidden');
-            }, 5000); // 5000 ms = 5 segundos
+            }, 5000); 
         }
     });
 </script>
