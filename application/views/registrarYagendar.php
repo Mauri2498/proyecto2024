@@ -199,7 +199,6 @@
                 });
             });
 
-            // Opcional: Agregar funcionalidad para cerrar la alerta manualmente
             $(document).on('click', '.close', function() {
                 $(this).closest('.alert').fadeOut('slow');
             });
@@ -211,7 +210,6 @@
             var minutoSelect = $('#minuto');
             var horaAtencionInput = $('#horaAtencion');
 
-            // Poblar las horas (asumiendo un horario de 8:00 AM a 8:00 PM)
             for (var i = 6; i <= 20; i++) {
                 horaSelect.append($('<option>', {
                     value: i.toString().padStart(2, '0'),
@@ -219,7 +217,6 @@
                 }));
             }
 
-            // Poblar los minutos (de 20 a 55, en intervalos de 5)
             for (var i = 20; i <= 55; i += 5) {
                 minutoSelect.append($('<option>', {
                     value: i.toString().padStart(2, '0'),
@@ -227,18 +224,15 @@
                 }));
             }
 
-            // Función para actualizar el input oculto
             function actualizarHoraAtencion() {
                 var hora = horaSelect.val();
                 var minuto = minutoSelect.val();
                 horaAtencionInput.val(hora + ':' + minuto);
             }
 
-            // Escuchar cambios en ambos selects
             horaSelect.change(actualizarHoraAtencion);
             minutoSelect.change(actualizarHoraAtencion);
 
-            // Inicializar el valor
             actualizarHoraAtencion();
         });
 
@@ -248,7 +242,6 @@
     var anioSelect = $('#anio');
     var fechaAtencionInput = $('#fechaNac');
 
-    // Poblar los días (1-31)
     for (var i = 1; i <= 31; i++) {
         diaSelect.append($('<option>', {
             value: i.toString().padStart(2, '0'),
@@ -256,7 +249,6 @@
         }));
     }
 
-    // Poblar los meses (1-12)
     for (var i = 1; i <= 12; i++) {
         mesSelect.append($('<option>', {
             value: i.toString().padStart(2, '0'),
@@ -264,7 +256,6 @@
         }));
     }
 
-    // Poblar los años (por ejemplo, de 1900 al año actual)
     var currentYear = new Date().getFullYear();
     for (var i = currentYear; i >= 1900; i--) {
         anioSelect.append($('<option>', {
@@ -273,7 +264,6 @@
         }));
     }
 
-    // Función para actualizar el input oculto
     function actualizarFechaAtencion() {
         var dia = diaSelect.val();
         var mes = mesSelect.val();
@@ -281,12 +271,10 @@
         fechaAtencionInput.val(anio + '-' + mes + '-' + dia);
     }
 
-    // Escuchar cambios en los selects
     diaSelect.change(actualizarFechaAtencion);
     mesSelect.change(actualizarFechaAtencion);
     anioSelect.change(actualizarFechaAtencion);
 
-    // Inicializar el valor
     actualizarFechaAtencion();
 });
 
