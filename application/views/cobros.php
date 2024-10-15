@@ -119,37 +119,5 @@
         });
     }
 
-    function registrarCobro() {
-    var idUsuario = $('#usuario_idusuario').val();
-    var idServicio = $('#servicios_idservicios').val();
-    var monto = $('#monto').val();
-    var fecha = $('#fecha').val();
-    var descripcion = $('#descripcion').val();
-
-    $.ajax({
-        url: '<?= site_url("cobros/registrarCobro") ?>',
-        type: 'POST',
-        data: {
-            usuario_idusuario: idUsuario,
-            servicios_idservicios: idServicio,
-            monto: monto,
-            fecha: fecha,
-            descripcion: descripcion
-        },
-        success: function(response) {
-            const result = JSON.parse(response);
-            if (result.error) {
-                alert(result.error);
-            } else {
-                alert(result.success + '\nTotal pagado: ' + result.montoPagado + ' Bs.\nDeuda restante: ' + result.deudaRestante + ' Bs.');
-                mostrarDetallePaciente(idUsuario);
-                // Limpiar el formulario
-                $('#formCobro')[0].reset();
-            }
-        },
-        error: function() {
-            alert('Error al comunicarse con el servidor.');
-        }
-    });
-}
+    
 </script>
