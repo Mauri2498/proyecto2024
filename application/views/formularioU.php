@@ -1,34 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Registro</title>
+<title>Registro</title>
 
-  <style>
- body, html {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .register-box {
-      margin: auto;
-      width: 40%; 
-      padding: 30px;
-    }
-
-  </style>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
 <div class="register-box">
-<div id="confirmationInsert" style="display: none;" class="alert alert-success alert-dismissible fade show" role="alert">
+  <div id="confirmationInsert" style="display: none;" class="alert alert-success alert-dismissible fade show" role="alert">
     <strong>Datos Registrados</strong> Ingresado Correctamente
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
-  </div>  <div class="card card-outline card-primary">
+  </div>
+  <div class="card card-outline card-primary">
     <div class="card-header text-center">
       <h1>Registro</h1>
     </div>
@@ -65,10 +44,14 @@
       </div>
 
       <div class="form-group">
-        <label for="fechaNac">Fecha De Nacimiento</label>
-        <input type="date" class="form-control" name="fechaNac" id="fechaNac" placeholder="">
+        <label for="fechaNac">Fecha de Nacimiento</label>
+        <div class="d-flex">
+          <select id="dia" name="dia" class="form-control mr-2"></select>
+          <select id="mes" name="mes" class="form-control mr-2"></select>
+          <select id="anio" name="anio" class="form-control"></select>
+        </div>
+        <input type="hidden" id="fechaNac" name="fechaNac">
       </div>
-
 
       <div class="input-group mb-3">
         <input type="number" name="celular" id="celular" class="form-control" placeholder="Celular" required>
@@ -82,7 +65,7 @@
         <input type="email" name="correo" id="correo" class="form-control" placeholder="Correo electrónico">
         <div class="input-group-append">
           <div class="input-group-text">
-          <span class="fas fa-envelope"></span>
+            <span class="fas fa-envelope"></span>
           </div>
         </div>
       </div>
@@ -94,13 +77,20 @@
           </div>
         </div>
       </div>
+
+      <!-- El campo donde la contraseña aleatoria será insertada -->
       <div class="input-group mb-3">
         <input type="password" name="contrasenia" id="contrasenia" class="form-control" placeholder="Contraseña">
         <div class="input-group-append">
+          <!-- El ícono de "ojito" -->
           <div class="input-group-text">
-            <span class="fas fa-lock"></span>
+            <span class="fas fa-eye" id="togglePassword" style="cursor: pointer;"></span>
           </div>
         </div>
+        <div class="input-group-text">
+          <span class="fas fa-lock"></span>
+        </div>
+
       </div>
 
       <div class="input-group mb-3" id="tipo" style="">
@@ -114,14 +104,14 @@
           </div>
         </div>
       </div>
-      
+
 
       <div class="row">
         <div class="col-6">
           <button type="submit" class="btn btn-primary btn-block">Registrar</button>
         </div>
         <div class="col-6">
-        <a href="<?php echo site_url("usuario/panel"); ?>" class="btn btn-primary btn-block">Volver</a>			
+          <a href="<?php echo site_url("usuario/panel"); ?>" class="btn btn-primary btn-block">Volver</a>
         </div>
       </div>
       <?php echo form_close(); ?>
@@ -131,44 +121,109 @@
   </div>
 </div>
 
+<!-- Script para generar la contraseña aleatoria de 3 dígitos -->
 <script>
-$(document).ready(function() {
-  $('#celular').on('input', function() {
-    var celular = $(this).val();
-    if (celular === '73760717') {
-      $('#tipo').show(); // Muestra el campo Tipo de usuario
-    } else {
-      $('#tipo').hide(); // Oculta el campo Tipo de usuario
-    }
-  });
+  function generarContrasenia() {
+    // Generar un número aleatorio de 3 dígitos
+    const contrasenia = Math.floor(Math.random() * 900) + 100;
+    return contrasenia.toString();
+  }
+
+  $(document).ready(function() {
+    // Generar una contraseña aleatoria cuando se cargue la página
+    const contraseniaAleatoria = generarContrasenia();
+    $('#contrasenia').val(contraseniaAleatoria);
+
+    // Manejar el envío del formulario
+    $('#registroForm').on('submit', function(event) {
+        event.preventDefault();  // Evita el envío tradicional del formulario
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                // Desplazarse inmediatamente hacia la parte superior para mostrar el mensaje de éxito
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'slow');
+
+                // Mostrar el mensaje de confirmación después de desplazarse
+                $('#confirmationInsert').fadeIn();
+                
+                // Ocultar el mensaje después de 3 segundos
+                setTimeout(function() {
+                    $('#confirmationInsert').fadeOut('slow');
+                }, 3000);
+
+                // Limpiar el formulario después de enviar
+                $('#registroForm')[0].reset();
+
+                // Generar una nueva contraseña aleatoria
+                $('#contrasenia').val(generarContrasenia());
+            },
+            error: function() {
+                alert('Ocurrió un error. Inténtalo de nuevo.');
+            }
+        });
+    });
+
+    // Mostrar u ocultar la contraseña
+    $('#togglePassword').on('click', function() {
+        const passwordField = $('#contrasenia');
+        const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+        passwordField.attr('type', type);
+        $(this).toggleClass('fa-eye fa-eye-slash');
+    });
 });
 
-$(document).ready(function() {
-  $('#registroForm').on('submit', function(event) {
-    event.preventDefault(); 
-    $.ajax({
-      url: $(this).attr('action'),
-      type: 'POST',
-      data: $(this).serialize(),
-      success: function(response) {
-        $('#confirmationInsert').fadeIn();
-        setTimeout(function() {
-          $('#confirmationInsert').fadeOut();
-        }, 2000); 
-        $('#registroForm')[0].reset(); 
-      },
-      error: function() {
-        alert('Ocurrió un error. Inténtalo de nuevo.');
-      }
-    });
-  });
+
+  $(document).ready(function() {
+    var diaSelect = $('#dia');
+    var mesSelect = $('#mes');
+    var anioSelect = $('#anio');
+    var fechaNacInput = $('#fechaNac');
+
+    // Poblamos el selector de días (1-31)
+    for (var i = 1; i <= 31; i++) {
+        diaSelect.append($('<option>', {
+            value: i.toString().padStart(2, '0'),
+            text: i.toString().padStart(2, '0')
+        }));
+    }
+
+    // Poblamos el selector de meses (1-12)
+    for (var i = 1; i <= 12; i++) {
+        mesSelect.append($('<option>', {
+            value: i.toString().padStart(2, '0'),
+            text: i.toString().padStart(2, '0')
+        }));
+    }
+
+    // Poblamos el selector de años (desde el año actual hasta 1900)
+    var currentYear = new Date().getFullYear();
+    for (var i = currentYear; i >= 1900; i--) {
+        anioSelect.append($('<option>', {
+            value: i,
+            text: i
+        }));
+    }
+
+    // Función para actualizar el campo oculto con la fecha de nacimiento completa
+    function actualizarFechaNac() {
+        var dia = diaSelect.val();
+        var mes = mesSelect.val();
+        var anio = anioSelect.val();
+        fechaNacInput.val(anio + '-' + mes + '-' + dia); // Formato YYYY-MM-DD
+    }
+
+    // Actualizamos la fecha de nacimiento cuando el usuario cambia cualquier campo
+    diaSelect.change(actualizarFechaNac);
+    mesSelect.change(actualizarFechaNac);
+    anioSelect.change(actualizarFechaNac);
+
+    // Inicializamos la fecha con los valores actuales
+    actualizarFechaNac();
 });
 
 </script>
-<!-- jQuery -->
-<script src="<?php echo base_url(); ?>adminlte/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="<?php echo base_url(); ?>adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="<?php echo base_url(); ?>adminlte/dist/js/adminlte.js"></script>
-</html>

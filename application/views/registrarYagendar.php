@@ -59,6 +59,7 @@
                     </label>
                 </div>
 
+                <!-- Campo de fecha de nacimiento -->
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
@@ -103,6 +104,10 @@
                 <div class="input-group mb-3">
                     <input type="password" name="contrasenia" id="contrasenia" class="form-control" placeholder="Contraseña">
                     <div class="input-group-append">
+                        <!-- El ícono de "ojito" -->
+                        <div class="input-group-text">
+                            <span class="fas fa-eye" id="togglePassword" style="cursor: pointer;"></span>
+                        </div>
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
                         </div>
@@ -128,11 +133,15 @@
                         <?php endforeach; ?>
                     </select>
                 </div>
-
+                <div class="form-group">
+                    <label for="cantidad">Cantidad</label>
+                    <input type="number" class="form-control" name="cantidad" id="cantidad" min="1" value="1">
+                </div>
+                <!-- Campo de fecha de atención que NO es afectado -->
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="fechaAtencion">Fecha</label>
+                            <label for="fechaAtencion">Fecha de Atención</label>
                             <input type="date" class="form-control" name="fechaAtencion" id="fechaAtencion">
                         </div>
                     </div>
@@ -163,7 +172,19 @@
     </div>
 
     <script>
+        function generarContrasenia() {
+            const contrasenia = Math.floor(Math.random() * 900) + 100;
+            return contrasenia.toString();
+        }
+
         $(document).ready(function() {
+            const contraseniaAleatoria = generarContrasenia();
+            $('#contrasenia').val(contraseniaAleatoria);
+
+            // Separar la fecha de nacimiento y la fecha de atención
+            var today = new Date().toISOString().split('T')[0];
+            $('#fechaAtencion').attr('min', today);
+
             $('#registroForm').on('submit', function(event) {
                 event.preventDefault();
 
@@ -174,18 +195,12 @@
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            // Mostrar el mensaje de éxito
                             $('#confirmationInsert').html('<strong>Éxito!</strong> Usuario registrado y cita agendada correctamente.').fadeIn();
-
-                            // Configurar el temporizador para ocultar la alerta después de 3 segundos
                             setTimeout(function() {
                                 $('#confirmationInsert').fadeOut('slow');
                             }, 3000);
-
-                            // Opcional: resetear el formulario
                             $('#registroForm')[0].reset();
-
-                            // Opcional: desplazarse al principio de la página para ver el mensaje
+                            $('#contrasenia').val(generarContrasenia());
                             $('html, body').animate({
                                 scrollTop: 0
                             }, 'slow');
@@ -203,7 +218,6 @@
                 $(this).closest('.alert').fadeOut('slow');
             });
         });
-
 
         $(document).ready(function() {
             var horaSelect = $('#hora');
@@ -237,53 +251,57 @@
         });
 
         $(document).ready(function() {
-    var diaSelect = $('#dia');
-    var mesSelect = $('#mes');
-    var anioSelect = $('#anio');
-    var fechaAtencionInput = $('#fechaNac');
+            var diaSelect = $('#dia');
+            var mesSelect = $('#mes');
+            var anioSelect = $('#anio');
+            var fechaNacInput = $('#fechaNac');
 
-    for (var i = 1; i <= 31; i++) {
-        diaSelect.append($('<option>', {
-            value: i.toString().padStart(2, '0'),
-            text: i.toString().padStart(2, '0')
-        }));
-    }
+            for (var i = 1; i <= 31; i++) {
+                diaSelect.append($('<option>', {
+                    value: i.toString().padStart(2, '0'),
+                    text: i.toString().padStart(2, '0')
+                }));
+            }
 
-    for (var i = 1; i <= 12; i++) {
-        mesSelect.append($('<option>', {
-            value: i.toString().padStart(2, '0'),
-            text: i.toString().padStart(2, '0')
-        }));
-    }
+            for (var i = 1; i <= 12; i++) {
+                mesSelect.append($('<option>', {
+                    value: i.toString().padStart(2, '0'),
+                    text: i.toString().padStart(2, '0')
+                }));
+            }
 
-    var currentYear = new Date().getFullYear();
-    for (var i = currentYear; i >= 1900; i--) {
-        anioSelect.append($('<option>', {
-            value: i,
-            text: i
-        }));
-    }
+            var currentYear = new Date().getFullYear();
+            for (var i = currentYear; i >= 1900; i--) {
+                anioSelect.append($('<option>', {
+                    value: i,
+                    text: i
+                }));
+            }
 
-    function actualizarFechaAtencion() {
-        var dia = diaSelect.val();
-        var mes = mesSelect.val();
-        var anio = anioSelect.val();
-        fechaAtencionInput.val(anio + '-' + mes + '-' + dia);
-    }
+            function actualizarFechaNac() {
+                var dia = diaSelect.val();
+                var mes = mesSelect.val();
+                var anio = anioSelect.val();
+                fechaNacInput.val(anio + '-' + mes + '-' + dia);
+            }
 
-    diaSelect.change(actualizarFechaAtencion);
-    mesSelect.change(actualizarFechaAtencion);
-    anioSelect.change(actualizarFechaAtencion);
+            diaSelect.change(actualizarFechaNac);
+            mesSelect.change(actualizarFechaNac);
+            anioSelect.change(actualizarFechaNac);
 
-    actualizarFechaAtencion();
-});
+            actualizarFechaNac();
+        });
 
+        $('#togglePassword').on('click', function() {
+            const passwordField = $('#contrasenia');
+            const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+            passwordField.attr('type', type);
+            $(this).toggleClass('fa-eye fa-eye-slash');
+        });
     </script>
-    <!-- jQuery -->
+
     <script src="<?php echo base_url(); ?>adminlte/plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
     <script src="<?php echo base_url(); ?>adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
     <script src="<?php echo base_url(); ?>adminlte/dist/js/adminlte.js"></script>
 </body>
 
