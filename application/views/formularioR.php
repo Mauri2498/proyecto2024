@@ -63,8 +63,6 @@
         <label for="fechaNac">Fecha De Nacimiento</label>
         <input type="date" class="form-control" name="fechaNac" id="fechaNac" placeholder="">
       </div>
-
-
       <div class="input-group mb-3">
         <input type="number" name="celular" id="celular" class="form-control" placeholder="Celular" required>
         <div class="input-group-append">

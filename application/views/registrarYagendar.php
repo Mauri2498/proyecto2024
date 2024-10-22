@@ -28,7 +28,6 @@
             <div class="card-body">
                 <p class="login-box-msg">Registrar nuevo usuario y agendar cita</p>
                 <?php echo form_open_multipart("usuario/agregarbdYagendarbd", 'id="registroForm"'); ?>
-
                 <div class="input-group mb-3">
                     <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre" minlength="3" required>
                     <div class="input-group-append">
@@ -46,7 +45,6 @@
                         </div>
                     </div>
                 </div>
-
                 <label for="sexo">Sexo</label>
                 <div class="form-check">
                     <label class="form-check-label">
