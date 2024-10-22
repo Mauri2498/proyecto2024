@@ -15,7 +15,7 @@
                     <ol class="breadcrumb float-sm-right"></ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 
     <section class="content">
